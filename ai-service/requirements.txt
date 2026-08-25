@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+pydantic
+neo4j
+pymongo
+google-genai
+python-dotenv
