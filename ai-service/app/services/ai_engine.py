@@ -2,12 +2,22 @@ import json
 from google import genai
 from app.core.config import GEMINI_API_KEY
 from app.db.neo4j_client import get_active_memories
+from app.services.guardrail import validate_input, sanitize_output
 
 # Initialize Google GenAI client
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
+BLOCKED_MESSAGE = "I am only authorized to assist with Spotify playback and listening context."
+
 def process_chat_query(user_id: str, prompt: str):
     """Fetches active Neo4j rules and prompts Gemini with bounded context boundaries."""
+    # 0. Guardrail (input): block prompt-injection / code-extraction attempts
+    if not validate_input(prompt):
+        return {
+            "reply": BLOCKED_MESSAGE,
+            "trace": {"blocked": True, "reason": "input_guardrail"}
+        }
+
     # 1. Fetch active preferences and exclusions from Neo4j
     active_facts = get_active_memories(user_id)
     
@@ -46,6 +56,9 @@ STRICT POLICY RULES:
             f"[Simulated Spotify AI DJ via Gemini] Track recommendations for '{prompt}'. "
             f"Enforced exclusions: {exclusions} | Applied preferences: {preferences}"
         )
+
+    # 5. Guardrail (output): block code / secret leaks
+    reply = sanitize_output(reply)
 
     return {
         "reply": reply,
