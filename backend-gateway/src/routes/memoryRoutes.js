@@ -20,6 +20,7 @@ router.get('/memories', async (req, res) => {
 });
 
 router.post('/events', async (req, res) => {
+  console.log("backend of node js is working ")
   const result = EventSchema.safeParse(req.body);
   if (!result.success) return res.status(400).json({ errors: result.error.errors });
 
