@@ -67,7 +67,9 @@ def ensure_memory_record(memory: dict):
 
 def remove_memory_record(memory_id: str):
     collection = _require_memories_collection()
-    return collection.find_one_and_delete({"memoryId": memory_id})
+    console.log(f"[MongoDB] Removing memory record with ID: {memory_id}")
+    return collection.delete_one({"memoryId": memory_id, "status": "active"})
+    
 
 
 def restore_memory_record(memory: dict):

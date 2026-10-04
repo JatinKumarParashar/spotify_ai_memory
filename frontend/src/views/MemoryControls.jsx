@@ -29,14 +29,14 @@ export default function MemoryControls({ userId }) {
   };
 
   const handleSaveEdit = async (id) => {
-    await editMemory(id, editText);
+    await editMemory(id, editText, userId);
     setEditingId(null);
     loadData();
   };
 
   const handleDelete = async (id) => {
     setMemories(memories.filter((m) => m.id !== id));
-    await deleteMemory(id);
+    await deleteMemory(id, userId);
   };
 
   return (
