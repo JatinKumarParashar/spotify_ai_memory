@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./layout";
+import { AudioLines, Radio } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -39,50 +40,61 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950">
-      <div className="bg-gray-900 p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-white mb-4">Login</h2>
-        {location.state?.message && <p className="text-green-400 text-sm mb-4">{location.state.message}</p>}
-        {error && <p role="alert" className="text-red-400 text-sm mb-4">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="mb-4">
-            <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              className="bg-gray-800 text-gray-300 placeholder:text-gray-500 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              id="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            />
+    <div className="signal-auth-layout">
+      <aside className="signal-auth-aside">
+        <div className="signal-auth-brand">
+          <span className="signal-brand-mark"><AudioLines size={20} /></span>
+          <span><strong className="block text-sm tracking-wide">SIGNAL ROOM</strong><span className="signal-kicker text-[9px] text-gray-500">PERSONAL MEMORY</span></span>
+        </div>
+        <div className="signal-auth-intro">
+          <p className="signal-kicker mb-3 flex items-center gap-2 text-[10px] uppercase text-lime-300"><Radio size={13} /> Secure listener access</p>
+          <h1 className="text-3xl font-semibold leading-tight text-white">Your listening context,<br /><span className="text-cyan-200">carried forward.</span></h1>
+          <p className="mt-4 max-w-sm text-sm leading-6 text-gray-400">Sign in to review the preferences and exclusions connected to your AI listening experience.</p>
+        </div>
+        <div className="signal-auth-readout signal-mono"><span>IDENTITY GATE</span><span className="text-lime-300">TOKEN REQUIRED</span></div>
+      </aside>
+
+      <main className="signal-auth-main">
+        <section className="signal-auth-form">
+          <p className="signal-kicker mb-2 text-[10px] uppercase text-cyan-300">Account / Sign in</p>
+          <h2 className="text-2xl font-semibold text-white">Welcome back</h2>
+          <p className="mt-1 text-sm text-gray-500">Enter your account details to continue.</p>
+          {location.state?.message && <p className="mt-5 border border-lime-300/20 bg-lime-300/5 p-3 text-sm text-lime-200">{location.state.message}</p>}
+          {error && <p role="alert" className="mt-5 border border-red-400/20 bg-red-400/5 p-3 text-sm text-red-200">{error}</p>}
+          <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+            <div>
+              <label className="mb-2 block text-xs font-medium text-gray-300" htmlFor="email">Email</label>
+              <input
+                className="signal-input"
+                id="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
             </div>
-            <div className="mb-4">
-            <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="password">
-              Password
-            </label>
-            <input
-              className="bg-gray-800 text-gray-300 placeholder:text-gray-500 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              id="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            />
+            <div>
+              <label className="mb-2 block text-xs font-medium text-gray-300" htmlFor="password">Password</label>
+              <input
+                className="signal-input"
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              />
             </div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {isSubmitting ? "Logging in..." : "Login"}
+            <button type="submit" disabled={isSubmitting} className="signal-primary-button w-full">
+              {isSubmitting ? "Connecting..." : "Sign in"}
             </button>
-        </form>
-        <p className="text-sm text-gray-400 text-center mt-5">
-          New here? <Link className="text-green-400 hover:text-green-300" to="/signup">Create an account</Link>
-        </p>
-      </div>
+          </form>
+          <p className="mt-6 border-t border-gray-800 pt-5 text-sm text-gray-500">
+            New to Signal Room? <Link className="font-medium text-cyan-200 hover:text-lime-200" to="/signup">Create an account</Link>
+          </p>
+        </section>
+      </main>
     </div>
   );
 };

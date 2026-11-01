@@ -40,84 +40,101 @@ export default function MemoryControls({ userId }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6 text-white font-sans">
-      <div className="bg-gray-900 border border-gray-800 p-5 rounded-xl">
-        <h3 className="text-lg font-bold text-green-400 mb-3 flex items-center gap-2">
-          <Sparkles className="w-5 h-5" /> Add Preference or Hard Exclusion
-        </h3>
-        <form onSubmit={handleAdd} className="flex gap-2">
+    <div className="mx-auto max-w-5xl space-y-8 px-6 text-white">
+      <header className="border-b border-gray-800 pb-5">
+        <p className="signal-kicker mb-2 text-[10px] uppercase text-lime-300">Memory registry / 01</p>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">Memory Controls</h1>
+            <p className="mt-1 text-sm text-gray-400">Manage the preferences and exclusions used for personalization.</p>
+          </div>
+          <span className="signal-mono text-xs text-gray-500">{memories.length.toString().padStart(2, '0')} ACTIVE</span>
+        </div>
+      </header>
+
+      <section className="border-b border-gray-800 pb-7">
+        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-100">
+          <Sparkles className="h-4 w-4 text-lime-300" /> Add a memory
+        </h2>
+        <form onSubmit={handleAdd} className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_190px_auto]">
           <input
             type="text"
-            placeholder="e.g. Acoustic guitar focus, No Heavy Metal"
+            placeholder="e.g. Prefers acoustic guitar"
             value={newFact}
             onChange={(e) => setNewFact(e.target.value)}
-            className="flex-1 bg-gray-800 border border-gray-700 px-3 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-green-500"
+            className="min-w-0 rounded-md border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-lime-300"
           />
           <select
             value={prefType}
             onChange={(e) => setPrefType(e.target.value)}
-            className="bg-gray-800 border border-gray-700 px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+            className="rounded-md border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-200 focus:border-cyan-300"
           >
             <option value="PREFERS">PREFERS</option>
             <option value="EXCLUDES">EXCLUDES</option>
           </select>
-          <button type="submit" className="bg-green-500 hover:bg-green-400 text-black font-semibold px-5 py-2 rounded-lg text-sm transition">
-            Save
+          <button type="submit" className="rounded-md bg-lime-300 px-5 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-lime-200">
+            Save memory
           </button>
         </form>
-      </div>
+      </section>
 
       <div className="space-y-3">
-        <h3 className="text-lg font-bold">Active Remembered Preferences ({memories.length})</h3>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold text-gray-100">Active memories</h2>
+          <span className="text-xs text-gray-500">Preferences and exclusions currently in use</span>
+        </div>
         {memories.length === 0 ? (
-          <p className="text-gray-500 text-sm bg-gray-900 p-6 rounded-xl border border-gray-800 text-center">
-            No active preferences stored yet.
+          <p className="border-y border-gray-800 py-8 text-center text-sm text-gray-500">
+            No active memories yet. Add a preference above to get started.
           </p>
         ) : (
           memories.map((mem) => (
-            <div key={mem.id} className="bg-gray-900 border border-gray-800 p-4 rounded-xl flex justify-between items-center">
-              <div className="space-y-1">
-                <span className={`text-xs px-2 py-0.5 rounded font-mono font-bold ${
-                  mem.type === 'EXCLUDES' ? 'bg-red-900/60 text-red-300' : 'bg-green-900/60 text-green-300'
+            <div key={mem.id} className="grid gap-4 border-b border-gray-800 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+              <div className="min-w-0 space-y-2">
+                <span className={`signal-mono inline-flex rounded border px-2 py-1 text-[10px] font-semibold ${
+                  mem.type === 'EXCLUDES' ? 'border-red-400/20 bg-red-400/5 text-red-300' : 'border-lime-300/20 bg-lime-300/5 text-lime-200'
                 }`}>
                   {mem.type}
                 </span>
                 
                 {editingId === mem.id ? (
-                  <div className="flex gap-2 mt-2">
+                  <div className="mt-2 flex flex-wrap gap-2">
                     <input
                       type="text"
                       value={editText}
                       onChange={(e) => setEditText(e.target.value)}
-                      className="bg-gray-800 border border-green-500 px-2 py-1 rounded text-sm text-white"
+                      className="min-w-0 flex-1 rounded-md border border-cyan-300/50 bg-gray-900 px-3 py-2 text-sm text-white sm:max-w-lg"
                     />
-                    <button onClick={() => handleSaveEdit(mem.id)} className="bg-green-500 text-black px-3 py-1 rounded text-xs font-bold">
+                    <button onClick={() => handleSaveEdit(mem.id)} className="rounded-md bg-lime-300 px-3 py-2 text-xs font-semibold text-gray-950">
                       Save
                     </button>
                   </div>
                 ) : (
-                  <p className="text-sm font-medium mt-1">{mem.fact}</p>
+                  <p className="break-words text-sm font-medium text-gray-100">{mem.fact}</p>
                 )}
 
-                <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
-                  <span className="flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-green-400" /> Confidence: {(mem.confidence * 100).toFixed(0)}%
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                  <span className="flex items-center gap-1.5">
+                    <ShieldCheck className="h-3.5 w-3.5 text-cyan-300" /> Confidence {(mem.confidence * 100).toFixed(0)}%
                   </span>
-                  <span>|</span>
-                  <span>ID: {mem.id}</span>
+                  <span className="signal-mono text-[10px] text-gray-600">ID {mem.id}</span>
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 sm:justify-end">
                 <button
                   onClick={() => { setEditingId(mem.id); setEditText(mem.fact); }}
-                  className="p-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition"
+                  title="Edit memory"
+                  aria-label="Edit memory"
+                  className="rounded-md border border-gray-700 p-2 text-gray-400 transition hover:border-cyan-300/40 hover:text-cyan-200"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(mem.id)}
-                  className="p-2 bg-red-900/40 hover:bg-red-800 text-red-300 rounded-lg transition"
+                  title="Delete memory"
+                  aria-label="Delete memory"
+                  className="rounded-md border border-gray-700 p-2 text-gray-400 transition hover:border-red-400/40 hover:text-red-300"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
