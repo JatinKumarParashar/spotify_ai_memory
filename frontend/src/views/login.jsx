@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./layout";
 import { AudioLines, Radio } from "lucide-react";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,7 +21,7 @@ const Login = () => {
     setError("");
     setIsSubmitting(true);
     try {
-      const response = await fetch("http://localhost:3000/v3/login", {
+      const response = await fetch(`${backendUrl}/v3/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

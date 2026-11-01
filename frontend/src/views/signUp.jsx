@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AudioLines, Radio } from 'lucide-react';
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const SignUp = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -17,7 +19,7 @@ const SignUp = () => {
     setError('');
     setIsSubmitting(true);
     try {
-      const response = await fetch('http://localhost:3000/v3/register', {
+      const response = await fetch(`${backendUrl}/v3/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
