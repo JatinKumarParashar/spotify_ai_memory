@@ -43,7 +43,7 @@ STRICT POLICY RULES:
     # 4. Execute inference with Gemini or fallback to simulation[cite: 1, 2]
     if client and GEMINI_API_KEY:
         response = client.models.generate_content(
-            model="Gemini 3 Flash Live",
+            model="Gemini 3.5 Flash Lite",
             contents=prompt,
             config=genai.types.GenerateContentConfig(
                 system_instruction=system_instruction,
