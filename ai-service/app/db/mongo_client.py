@@ -19,6 +19,17 @@ except Exception as exc:  # pragma: no cover - fail-open for local/demo usage
     print(f"[MongoDB Warning] MongoDB unavailable; continuing without audit storage: {exc}")
 
 
+def check_mongodb() -> bool:
+    if client is None:
+        return False
+    try:
+        client.admin.command("ping")
+        return True
+    except Exception as exc:
+        print(f"[MongoDB Warning] Health check failed: {exc}")
+        return False
+
+
 def _require_memories_collection():
     if memories_collection is None:
         raise RuntimeError("MongoDB memory storage is unavailable")

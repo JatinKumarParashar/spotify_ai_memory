@@ -1,9 +1,11 @@
 import uuid
 from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.schemas import EventPayload, EditPayload, ChatPayload
 from app.db.neo4j_client import (
+    check_neo4j,
     write_memory_fact,
     get_active_memories,
     get_memory_by_id,
@@ -13,6 +15,7 @@ from app.db.neo4j_client import (
     restore_memory_fact,
 )
 from app.db.mongo_client import (
+    check_mongodb,
     ensure_memory_record,
     get_memory_record,
     insert_memory_record,
@@ -33,6 +36,23 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/health")
+def health_endpoint():
+    dependencies = {
+        "mongodb": check_mongodb(),
+        "neo4j": check_neo4j(),
+    }
+    is_healthy = all(dependencies.values())
+    return JSONResponse(
+        status_code=200 if is_healthy else 503,
+        content={
+            "status": "ok" if is_healthy else "degraded",
+            "service": "ai-service",
+            "dependencies": dependencies,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        },
+    )
 
 @app.get("/recommendations")
 def recommendations_endpoint(user_id: str, prompt: str):

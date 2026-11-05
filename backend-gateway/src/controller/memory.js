@@ -10,7 +10,7 @@ exports.getMemory = async (req, res) => {
       return res
         .status(400)
         .json({ error: "Query param 'userId' is required" });
-
+    console.log("getMemory called with userId:", userId);
     const response = await axios.get(`${PYTHON_BASE}/internal/memories`, {
       params: { user_id: userId },
     });

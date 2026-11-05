@@ -16,6 +16,18 @@ except Exception as exc:  # pragma: no cover - fallback for local/dev runs
     print(f"[Neo4j Warning] Graph database unavailable; continuing without persisted memory graph: {exc}")
 
 
+def check_neo4j() -> bool:
+    if driver is None:
+        return False
+    try:
+        with driver.session() as session:
+            session.run("RETURN 1").consume()
+        return True
+    except Exception as exc:
+        print(f"[Neo4j Warning] Health check failed: {exc}")
+        return False
+
+
 def _require_driver():
     if driver is None:
         raise RuntimeError("Neo4j memory storage is unavailable")

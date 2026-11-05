@@ -9,4 +9,18 @@ const connectDB = async () => {
   }
 };
 
+const checkDB = async () => {
+  try {
+    if (!mongoose.connection.db) {
+      return false;
+    }
+    await mongoose.connection.db.admin().ping();
+    return true;
+  } catch (error) {
+    console.warn(`MongoDB health check failed: ${error.message}`);
+    return false;
+  }
+};
+
 module.exports = connectDB;
+module.exports.checkDB = checkDB;
